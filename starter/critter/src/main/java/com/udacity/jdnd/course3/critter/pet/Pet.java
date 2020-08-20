@@ -2,10 +2,7 @@ package com.udacity.jdnd.course3.critter.pet;
 
 import com.udacity.jdnd.course3.critter.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -20,6 +17,8 @@ public class Pet {
     private User owner;
 
     private LocalDate birthDate;
+
+    @Column(length = 512)
     private String notes;
 
     public Pet() {

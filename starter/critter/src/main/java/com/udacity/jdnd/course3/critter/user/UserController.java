@@ -1,9 +1,15 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.pet.Pet;
+import com.udacity.jdnd.course3.critter.pet.PetRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -16,14 +22,61 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    PetRepository petRepository;
+
+    private CustomerDTO getCustomerDTOFromCustomer(Customer customer){
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(customer, customerDTO, "pets");
+        // Convert List of Pets to List of PetIds
+        List<Long> petIds = new ArrayList<>();
+        List<Pet> pets = customer.getPets();
+        if(pets != null) {
+            for (Pet p : pets) {
+                petIds.add(p.getId());
+            }
+            customerDTO.setPetIds(petIds);
+        }
+        return customerDTO;
+    }
+
+    private Customer getCustomerFromCustomerDTO(CustomerDTO customerDTO){
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO, customer, "petIds");
+
+        // Convert List of PetIds to List of Pets
+        List<Long> petIds = customerDTO.getPetIds();
+        if(petIds != null) {
+            List<Pet> pets = petRepository.findAllById(petIds);
+            customer.setPets(pets);
+        }
+
+        return customer;
+    }
+
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+        // Convert DTO to Customer and save
+        Customer customer = getCustomerFromCustomerDTO(customerDTO);
+        Customer savedCustomer = userRepository.save(customer);
+
+        // Convert Customer to DTO and return
+        return getCustomerDTOFromCustomer(savedCustomer);
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        List<Customer> customers = userRepository.findAllCustomers();
+        List<CustomerDTO> customerDTOs = new ArrayList<>();
+        if(customers != null){
+            for(Customer customer : customers){
+                customerDTOs.add(getCustomerDTOFromCustomer(customer));
+            }
+        }
+        return customerDTOs;
     }
 
     @GetMapping("/customer/pet/{petId}")
