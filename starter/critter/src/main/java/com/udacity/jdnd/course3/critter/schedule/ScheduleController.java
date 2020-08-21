@@ -1,19 +1,16 @@
 package com.udacity.jdnd.course3.critter.schedule;
 
 import com.udacity.jdnd.course3.critter.pet.Pet;
-import com.udacity.jdnd.course3.critter.pet.PetDTO;
-import com.udacity.jdnd.course3.critter.pet.PetRepository;
-import com.udacity.jdnd.course3.critter.user.Customer;
+import com.udacity.jdnd.course3.critter.service.PetService;
+import com.udacity.jdnd.course3.critter.service.ScheduleService;
+import com.udacity.jdnd.course3.critter.service.UserService;
 import com.udacity.jdnd.course3.critter.user.Employee;
-import com.udacity.jdnd.course3.critter.user.User;
-import com.udacity.jdnd.course3.critter.user.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Handles web requests related to Schedules.
@@ -23,13 +20,13 @@ import java.util.Optional;
 public class ScheduleController {
 
     @Autowired
-    ScheduleRepository scheduleRepository;
+    ScheduleService scheduleService;
 
     @Autowired
-    PetRepository petRepository;
+    PetService petService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     private Schedule getScheduleFromScheduleDTO(ScheduleDTO scheduleDTO){
         Schedule schedule = new Schedule();
@@ -38,12 +35,12 @@ public class ScheduleController {
         List<Employee> employees = new ArrayList<>();
         if(scheduleDTO.getEmployeeIds() != null){
             for(Long l : scheduleDTO.getEmployeeIds()){
-                employees.add(userRepository.findEmployeeById(l));
+                employees.add(userService.getEmployeeById(l));
             }
         }
         List<Pet> pets = new ArrayList<>();
         if(scheduleDTO.getPetIds() != null){
-            pets = (petRepository.findAllById(scheduleDTO.getPetIds()));
+            pets = petService.getAllPetsByIds(scheduleDTO.getPetIds());
         }
         schedule.setEmployees(employees);
         schedule.setPets(pets);
@@ -72,13 +69,13 @@ public class ScheduleController {
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
         Schedule schedule = getScheduleFromScheduleDTO(scheduleDTO);
-        Schedule savedSchedule = scheduleRepository.save(schedule);
+        Schedule savedSchedule = scheduleService.saveSchedule(schedule);
         return getScheduleDTOFromSchedule(savedSchedule);
     }
 
     @GetMapping
     public List<ScheduleDTO> getAllSchedules() {
-        List<Schedule> schedules = scheduleRepository.findAll();
+        List<Schedule> schedules = scheduleService.getAllSchedules();
 
         List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
         for(Schedule schedule : schedules){
@@ -89,7 +86,8 @@ public class ScheduleController {
 
     @GetMapping("/pet/{petId}")
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
-        List<Schedule> schedules = scheduleRepository.findByPets_Id(petId);
+        List<Schedule> schedules = scheduleService.getSchedulesForPet(petId);
+
         List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
         for(Schedule schedule : schedules){
             scheduleDTOs.add(getScheduleDTOFromSchedule(schedule));
@@ -99,7 +97,8 @@ public class ScheduleController {
 
     @GetMapping("/employee/{employeeId}")
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
-        List<Schedule> schedules = scheduleRepository.findByEmployees_Id(employeeId);
+        List<Schedule> schedules = scheduleService.getSchedulesForEmployee(employeeId);
+
         List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
         for(Schedule schedule : schedules){
             scheduleDTOs.add(getScheduleDTOFromSchedule(schedule));
@@ -109,17 +108,9 @@ public class ScheduleController {
 
     @GetMapping("/customer/{customerId}")
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
-        Optional<User> optionalUser = userRepository.findById(customerId);
-        Customer customer = (Customer) optionalUser.orElse(null);
-        List<Pet> pets = customer.getPets();
+        List<Schedule> schedules = scheduleService.getSchedulesForCustomer(customerId);
 
-        List<Schedule> schedules = new ArrayList<>();
         List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
-        for (Pet pet : pets) {
-            schedules.addAll(scheduleRepository.findByPets_Id(pet.getId()));
-        }
-
-
         for (Schedule schedule : schedules) {
             scheduleDTOs.add(getScheduleDTOFromSchedule(schedule));
         }

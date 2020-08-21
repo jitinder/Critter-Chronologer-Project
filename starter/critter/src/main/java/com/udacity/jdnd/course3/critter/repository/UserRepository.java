@@ -1,5 +1,8 @@
-package com.udacity.jdnd.course3.critter.user;
+package com.udacity.jdnd.course3.critter.repository;
 
+import com.udacity.jdnd.course3.critter.user.Customer;
+import com.udacity.jdnd.course3.critter.user.Employee;
+import com.udacity.jdnd.course3.critter.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,8 +16,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select c from Customer c")
     List<Customer> findAllCustomers();
 
+    Customer findCustomerById(Long id);
     Employee findEmployeeById(Long id);
 
-    @Query("select e from Employee e where :day member of e.daysAvailable")
-    List<Employee> findByDaysAvailableContaining(DayOfWeek day);
+    List<Employee> findAllByDaysAvailableContaining(DayOfWeek day);
 }

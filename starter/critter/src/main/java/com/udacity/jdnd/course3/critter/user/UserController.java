@@ -1,16 +1,15 @@
 package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.pet.Pet;
-import com.udacity.jdnd.course3.critter.pet.PetRepository;
+import com.udacity.jdnd.course3.critter.service.PetService;
+import com.udacity.jdnd.course3.critter.service.UserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -24,10 +23,10 @@ import java.util.Set;
 public class UserController {
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     @Autowired
-    PetRepository petRepository;
+    PetService petService;
 
     private CustomerDTO getCustomerDTOFromCustomer(Customer customer){
         CustomerDTO customerDTO = new CustomerDTO();
@@ -51,7 +50,7 @@ public class UserController {
         // Convert List of PetIds to List of Pets
         List<Long> petIds = customerDTO.getPetIds();
         if(petIds != null) {
-            List<Pet> pets = petRepository.findAllById(petIds);
+            List<Pet> pets = petService.getAllPetsByIds(petIds);
             customer.setPets(pets);
         }
 
@@ -62,7 +61,7 @@ public class UserController {
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
         // Convert DTO to Customer and save
         Customer customer = getCustomerFromCustomerDTO(customerDTO);
-        Customer savedCustomer = userRepository.save(customer);
+        Customer savedCustomer = (Customer) userService.saveUser(customer);
 
         // Convert Customer to DTO and return
         return getCustomerDTOFromCustomer(savedCustomer);
@@ -70,7 +69,7 @@ public class UserController {
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        List<Customer> customers = userRepository.findAllCustomers();
+        List<Customer> customers = userService.getAllCustomers();
         List<CustomerDTO> customerDTOs = new ArrayList<>();
         if(customers != null){
             for(Customer customer : customers){
@@ -82,15 +81,11 @@ public class UserController {
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        Optional<Pet> optionalPet = petRepository.findById(petId);
-        Pet pet = optionalPet.orElse(null);
-
+        Pet pet = petService.getPetById(petId);
 
         CustomerDTO customerDTO = new CustomerDTO();
-        if (pet != null) {
-            Customer customer = (Customer) pet.getOwner();
-            customerDTO = getCustomerDTOFromCustomer(customer);
-        }
+        Customer customer = (Customer) pet.getOwner();
+        customerDTO = getCustomerDTOFromCustomer(customer);
 
         return customerDTO;
     }
@@ -110,20 +105,20 @@ public class UserController {
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         Employee employee = getEmployeeFromEmployeeDTO(employeeDTO);
-        Employee savedEmployee = userRepository.save(employee);
+        Employee savedEmployee = (Employee) userService.saveUser(employee);
 
         return getEmployeeDTOFromEmployee(savedEmployee);
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        Employee employee = userRepository.findEmployeeById(employeeId);
+        Employee employee = userService.getEmployeeById(employeeId);
         return getEmployeeDTOFromEmployee(employee);
     }
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        Employee employee = userRepository.findEmployeeById(employeeId);
+        Employee employee = userService.getEmployeeById(employeeId);
         employee.setDaysAvailable(daysAvailable);
     }
 
@@ -132,15 +127,10 @@ public class UserController {
         DayOfWeek day = employeeDTO.getDate().getDayOfWeek();
         Set<EmployeeSkill> skills = employeeDTO.getSkills();
 
-        List<Employee> employees = userRepository.findByDaysAvailableContaining(day);
+        List<Employee> employees = userService.getAvailableEmployees(day, skills);//userRepository.findByDaysAvailableContaining(day);
         List<EmployeeDTO> employeeDTOList = new ArrayList<>();
-        if(employees != null){
-            for(Employee e : employees){
-                // Check if employee skills contains the required skills
-                if(e.getSkills().containsAll(skills)) {
-                    employeeDTOList.add(getEmployeeDTOFromEmployee(e));
-                }
-            }
+        for(Employee e : employees){
+                employeeDTOList.add(getEmployeeDTOFromEmployee(e));
         }
         return employeeDTOList;
     }

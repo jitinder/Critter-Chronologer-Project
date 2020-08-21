@@ -1,15 +1,14 @@
 package com.udacity.jdnd.course3.critter.pet;
 
-import com.udacity.jdnd.course3.critter.user.Customer;
+import com.udacity.jdnd.course3.critter.service.PetService;
+import com.udacity.jdnd.course3.critter.service.UserService;
 import com.udacity.jdnd.course3.critter.user.User;
-import com.udacity.jdnd.course3.critter.user.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Handles web requests related to Pets.
@@ -19,17 +18,16 @@ import java.util.Optional;
 public class PetController {
 
     @Autowired
-    PetRepository petRepository;
+    PetService petService;
 
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
 
     private Pet getPetFromPetDTO(PetDTO petDTO){
         Pet pet = new Pet();
         BeanUtils.copyProperties(petDTO, pet, "ownerId");
 
-        Optional<User> optionalUser = userRepository.findById(petDTO.getOwnerId());
-        User user = optionalUser.orElse(null);
+        User user = userService.getCustomerById(petDTO.getOwnerId());
         pet.setOwner(user);
 
         return pet;
@@ -47,25 +45,14 @@ public class PetController {
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         Pet pet = getPetFromPetDTO(petDTO);
-        Pet savedPet = petRepository.save(pet);
 
-        // Add pet to Customer
-        Customer customer = (Customer) savedPet.getOwner();
-        List<Pet> customerPets = customer.getPets();
-        if(customerPets == null){
-            customerPets = new ArrayList<>();
-        }
-        customerPets.add(savedPet);
-        customer.setPets(customerPets);
-        userRepository.save(customer);
-
+        Pet savedPet = petService.savePet(pet);
         return getPetDTOFromPet(savedPet);
     }
 
     @GetMapping("/{petId}")
     public PetDTO getPet(@PathVariable long petId) {
-        Optional<Pet> optionalPet = petRepository.findById(petId);
-        Pet pet = optionalPet.orElse(null);
+        Pet pet = petService.getPetById(petId);
 
         PetDTO petDTO = new PetDTO();
         if(pet != null) {
@@ -76,7 +63,7 @@ public class PetController {
 
     @GetMapping
     public List<PetDTO> getPets(){
-        List<Pet> pets = petRepository.findAll();
+        List<Pet> pets = petService.getAllPets();
         List<PetDTO> petDTOs = new ArrayList<>();
 
         for(Pet pet : pets){
@@ -88,15 +75,11 @@ public class PetController {
 
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
-        Optional<User> optionalUser = userRepository.findById(ownerId);
-        Customer customer = (Customer) optionalUser.orElse(null);
+        List<Pet> pets = petService.getPetsByOwnerId(ownerId);
 
         List<PetDTO> petDTOs = new ArrayList<>();
-        if(customer != null) {
-            List<Pet> pets = customer.getPets();
-            for(Pet pet : pets){
-                petDTOs.add(getPetDTOFromPet(pet));
-            }
+        for(Pet pet : pets){
+            petDTOs.add(getPetDTOFromPet(pet));
         }
         return petDTOs;
     }
