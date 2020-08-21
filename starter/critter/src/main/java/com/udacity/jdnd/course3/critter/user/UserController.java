@@ -89,7 +89,7 @@ public class UserController {
         CustomerDTO customerDTO = new CustomerDTO();
         if (pet != null) {
             Customer customer = (Customer) pet.getOwner();
-            BeanUtils.copyProperties(customer,customerDTO);
+            customerDTO = getCustomerDTOFromCustomer(customer);
         }
 
         return customerDTO;
