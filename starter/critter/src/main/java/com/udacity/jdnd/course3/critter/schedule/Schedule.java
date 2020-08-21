@@ -15,10 +15,10 @@ public class Schedule {
     @GeneratedValue
     private Long id;
 
-    @OneToMany
+    @ManyToMany
     private List<Employee> employees;
 
-    @OneToMany
+    @ManyToMany
     private List<Pet> pets;
     private LocalDate date;
     @ElementCollection
