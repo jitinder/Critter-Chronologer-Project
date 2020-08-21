@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -81,27 +82,67 @@ public class UserController {
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+        Optional<Pet> optionalPet = petRepository.findById(petId);
+        Pet pet = optionalPet.orElse(null);
+
+
+        CustomerDTO customerDTO = new CustomerDTO();
+        if (pet != null) {
+            Customer customer = (Customer) pet.getOwner();
+            BeanUtils.copyProperties(customer,customerDTO);
+        }
+
+        return customerDTO;
+    }
+
+    private Employee getEmployeeFromEmployeeDTO(EmployeeDTO employeeDTO){
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+        return employee;
+    }
+
+    private EmployeeDTO getEmployeeDTOFromEmployee(Employee employee){
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
     }
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        Employee employee = getEmployeeFromEmployeeDTO(employeeDTO);
+        Employee savedEmployee = userRepository.save(employee);
+
+        return getEmployeeDTOFromEmployee(savedEmployee);
     }
 
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        Employee employee = userRepository.findEmployeeById(employeeId);
+        return getEmployeeDTOFromEmployee(employee);
     }
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+        Employee employee = userRepository.findEmployeeById(employeeId);
+        employee.setDaysAvailable(daysAvailable);
     }
 
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        DayOfWeek day = employeeDTO.getDate().getDayOfWeek();
+        Set<EmployeeSkill> skills = employeeDTO.getSkills();
+
+        List<Employee> employees = userRepository.findByDaysAvailableContaining(day);
+        List<EmployeeDTO> employeeDTOList = new ArrayList<>();
+        if(employees != null){
+            for(Employee e : employees){
+                // Check if employee skills contains the required skills
+                if(e.getSkills().containsAll(skills)) {
+                    employeeDTOList.add(getEmployeeDTOFromEmployee(e));
+                }
+            }
+        }
+        return employeeDTOList;
     }
 
 }

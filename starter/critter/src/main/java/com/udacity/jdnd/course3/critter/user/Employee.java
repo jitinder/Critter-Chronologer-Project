@@ -2,6 +2,8 @@ package com.udacity.jdnd.course3.critter.user;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.time.DayOfWeek;
 import java.util.Set;
 
