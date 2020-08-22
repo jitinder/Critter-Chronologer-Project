@@ -1,0 +1,301 @@
+{
+	"id": "ad4237f4-8b67-4ffc-bd2d-e7c8dbdf1a48",
+	"name": "Udacity",
+	"timestamp": "2020-08-22T15:18:41.354Z",
+	"collection_id": "cbdda5a8-c174-4c6b-8f4e-16929476b766",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "379a88bb-dd1a-4fb7-90d3-4b8ff7df4609",
+			"name": "Save Customer",
+			"url": "http://localhost:8082/user/customer",
+			"time": 40,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				40
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "15dbc57c-c3e5-475e-a36e-2ec0d51893fb",
+			"name": "Save Pet",
+			"url": "http://localhost:8082/pet",
+			"time": 42,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				42
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "df60f426-771a-43b7-8408-15dc245707b9",
+			"name": "Save Employee",
+			"url": "http://localhost:8082/user/employee",
+			"time": 24,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				24
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "e6321e2f-c8bf-44a8-96f8-f0adc8135839",
+			"name": "Add Employee Schedule",
+			"url": "http://localhost:8082/user/employee/3",
+			"time": 0,
+			"responseCode": {},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				0
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "f9c777d2-2f67-4940-8cdf-964205230233",
+			"name": "Check Availability",
+			"url": "http://localhost:8082/user/employee/availability",
+			"time": 19,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				19
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "5c48b72f-1461-4f0e-9b11-79077007757c",
+			"name": "Create Schedule",
+			"url": "http://localhost:8082/schedule",
+			"time": 49,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				49
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "ba9f79a7-b676-4730-8944-25a24ab3f5bd",
+			"name": "Find Schedule By Pet",
+			"url": "http://localhost:8082/schedule/pet/2",
+			"time": 30,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				30
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "eafe0e96-f4f0-41e5-8805-5a2bbdbedc27",
+			"name": "Find Schedule By Employee",
+			"url": "http://localhost:8082/schedule/employee/3",
+			"time": 53,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				53
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "0874140f-b633-4cd9-a51b-868a957e2b74",
+			"name": "Find Schedule By Owner",
+			"url": "http://localhost:8082/schedule/customer/1",
+			"time": 41,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				41
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "09f8e97d-cab8-45cb-9266-846071a715ce",
+			"name": "Get All Customers",
+			"url": "http://localhost:8082/user/customer",
+			"time": 33,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				33
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "94aa42fb-dbe0-45c1-b8c7-779b47660cfc",
+			"name": "Get All Pets",
+			"url": "http://localhost:8082/pet",
+			"time": 10,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				10
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "87d79c12-86cc-4c11-9bb8-193af0f1b7c5",
+			"name": "Get Pets By Owner",
+			"url": "http://localhost:8082/pet/owner/1",
+			"time": 40,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				40
+			],
+			"allTests": [
+				{}
+			]
+		},
+		{
+			"id": "fff2394e-5190-46b6-b619-7e8f68237f04",
+			"name": "Get Owner By Pet",
+			"url": "http://localhost:8082/user/customer/pet/2",
+			"time": 14,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				14
+			],
+			"allTests": [
+				{}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 395,
+	"collection": {
+		"requests": [
+			{
+				"id": "379a88bb-dd1a-4fb7-90d3-4b8ff7df4609",
+				"method": "POST"
+			},
+			{
+				"id": "15dbc57c-c3e5-475e-a36e-2ec0d51893fb",
+				"method": "POST"
+			},
+			{
+				"id": "df60f426-771a-43b7-8408-15dc245707b9",
+				"method": "POST"
+			},
+			{
+				"id": "e6321e2f-c8bf-44a8-96f8-f0adc8135839",
+				"method": "PUT"
+			},
+			{
+				"id": "f9c777d2-2f67-4940-8cdf-964205230233",
+				"method": "GET"
+			},
+			{
+				"id": "5c48b72f-1461-4f0e-9b11-79077007757c",
+				"method": "POST"
+			},
+			{
+				"id": "ba9f79a7-b676-4730-8944-25a24ab3f5bd",
+				"method": "GET"
+			},
+			{
+				"id": "eafe0e96-f4f0-41e5-8805-5a2bbdbedc27",
+				"method": "GET"
+			},
+			{
+				"id": "0874140f-b633-4cd9-a51b-868a957e2b74",
+				"method": "GET"
+			},
+			{
+				"id": "09f8e97d-cab8-45cb-9266-846071a715ce",
+				"method": "GET"
+			},
+			{
+				"id": "94aa42fb-dbe0-45c1-b8c7-779b47660cfc",
+				"method": "GET"
+			},
+			{
+				"id": "87d79c12-86cc-4c11-9bb8-193af0f1b7c5",
+				"method": "GET"
+			},
+			{
+				"id": "fff2394e-5190-46b6-b619-7e8f68237f04",
+				"method": "GET"
+			}
+		]
+	}
+}
